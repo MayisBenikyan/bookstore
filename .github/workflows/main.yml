@@ -1,0 +1,89 @@
+name: Build and Push Client, Server, and Nginx Images to AWS ECR
+on:
+  push:
+    branches:
+      - master 
+jobs:
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+
+      - name: Build Client Image
+        run: docker build -t web-app/client:latest -f ./client/Dockerfile.dev client
+
+      - name: Scan Client Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: web-app/client:latest
+          format: "table"
+          ignore-unfixed: true
+
+
+      - name: Build Server Image
+        run: docker build -t web-app/server:latest -f ./server/Dockerfile.dev server
+
+      - name: Scan Server Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: web-app/server:latest
+          format: "table"
+          ignore-unfixed: true
+          
+
+      - name: Build Nginx Image
+        run: docker build -t web-app/nginx:latest -f ./nginx/Dockerfile.dev nginx
+
+      - name: Scan Nginx Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: web-app/nginx:latest
+          format: "table"
+          ignore-unfixed: true
+
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+
+      - name: Tag and Push Client Image to ECR
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        run: |
+          docker tag web-app/client:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:latest
+          docker tag web-app/client:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:$GITHUB_SHA
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:$GITHUB_SHA
+          
+      - name: Tag and Push Server Image to ECR
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        run: |
+          docker tag web-app/server:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:latest
+          docker tag web-app/server:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:$GITHUB_SHA
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:$GITHUB_SHA
+          
+      - name: Tag and Push Nginx Image to ECR
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        run: |
+          docker tag web-app/nginx:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:latest
+          docker tag web-app/nginx:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:$GITHUB_SHA
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:$GITHUB_SHA
