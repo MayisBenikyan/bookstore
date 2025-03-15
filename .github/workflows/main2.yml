@@ -11,7 +11,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_KEY }}
+          key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.PORT }}
           source: "docker-compose.yml"
           target: /home/ubuntu
