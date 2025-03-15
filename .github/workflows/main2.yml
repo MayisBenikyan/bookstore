@@ -11,6 +11,7 @@ jobs:
         with:
           host: 16.16.67.21
           username: ubuntu
+          password: ${{ secrets.SERVER_KEY }}
           port: 22
           source: "docker-compose.yml"
           target: /home/ubuntu
