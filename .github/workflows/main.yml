@@ -88,9 +88,11 @@ jobs:
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:$GITHUB_SHA
 
   deploy:
+    needs: build-and-push
+    name: Deploying to the server
     runs-on: ubuntu-latest
     steps:
-      - name: Copy file via SSH key
+      - name: Copy docker-compose.yml via SSH
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
@@ -100,7 +102,7 @@ jobs:
           source: "docker-compose.yml"
           target: /home/ubuntu
 
-      - name: Run Docker Compose on server
+      - name: Deploy and restart services
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
