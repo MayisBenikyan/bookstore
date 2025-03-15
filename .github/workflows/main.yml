@@ -5,9 +5,8 @@ on:
       - master 
 jobs:
   build-and-push:
-    name: Build and Push Docker Images
+    name: Build and Push Docker Images to Amazon ECR
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -88,8 +87,10 @@ jobs:
           docker tag web-app/nginx:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:$GITHUB_SHA
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:$GITHUB_SHA
 
-
-      - name: Copy file via ssh password
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy file via SSH key
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
@@ -98,3 +99,14 @@ jobs:
           port: ${{ secrets.PORT }}
           source: "docker-compose.yml"
           target: /home/ubuntu
+
+      - name: Run Docker Compose on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/ubuntu
+            docker compose up -d
