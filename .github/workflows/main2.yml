@@ -9,9 +9,9 @@ jobs:
       - name: Copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: 16.16.67.21
-          username: ubuntu
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_KEY }}
-          port: 22
+          port: ${{ secrets.PORT }}
           source: "docker-compose.yml"
           target: /home/ubuntu
