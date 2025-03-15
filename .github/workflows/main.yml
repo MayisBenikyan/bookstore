@@ -64,8 +64,6 @@ jobs:
         run: 
           docker tag web-app/client:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:latest
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:latest
-          docker tag web-app/client:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:$GITHUB_SHA
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:$GITHUB_SHA
           
       - name: Tag and Push Server Image to ECR
         env:
@@ -74,8 +72,6 @@ jobs:
         run: 
           docker tag web-app/server:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:latest
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:latest
-          docker tag web-app/server:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:$GITHUB_SHA
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:$GITHUB_SHA
           
       - name: Tag and Push Nginx Image to ECR
         env:
@@ -84,8 +80,6 @@ jobs:
         run: 
           docker tag web-app/nginx:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:latest
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:latest
-          docker tag web-app/nginx:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:$GITHUB_SHA
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:$GITHUB_SHA
 
   deploy:
     needs: build-and-push
