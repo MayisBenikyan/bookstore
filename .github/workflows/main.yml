@@ -1,4 +1,4 @@
-name: Build and Push Client, Server, and Nginx Images to AWS ECR
+name: Build and Push Client, Server, and Nginx Images to AWS ECR and Deploying to the server
 on:
   push:
     branches:
