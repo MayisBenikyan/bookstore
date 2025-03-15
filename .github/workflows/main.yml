@@ -100,6 +100,9 @@ jobs:
           target: /home/ubuntu
 
       - name: Deploy and restart services
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -107,5 +110,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            aws ecr get-login-password --region $AWS_REGION
+            docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
             cd /home/ubuntu
             docker compose up -d
