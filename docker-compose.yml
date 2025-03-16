@@ -2,8 +2,8 @@ version: '3.9'
 
 services:
   server:
+    image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/server:latest
     restart: always
-    image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/server
     container_name: bookstore_server
     volumes:
       - /app/node_modules
@@ -30,8 +30,8 @@ services:
       - bookstore_network
 
   client:
+    image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/client:latest
     restart: always
-    image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/client
     container_name: bookstore_client
     volumes:
       - /app/node_modules
@@ -42,11 +42,11 @@ services:
       - bookstore_network
 
   nginx:
+    image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/nginx:latest
     restart: always
     depends_on:
       - server
       - client
-    image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/nginx
     container_name: bookstore_nginx
     ports:
       - 8080:80
