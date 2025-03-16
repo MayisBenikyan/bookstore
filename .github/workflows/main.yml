@@ -97,12 +97,13 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.PORT }}
           source: "docker-compose.yml"
-          target: /home/ubuntu/bookstore
+          target: /home/${{ secrets.SERVER_USERNAME }}/bookstore
 
       - name: Deploy and restart services
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -110,6 +111,6 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/ubuntu/bookstore
+            cd /home/$SERVER_USERNAME/bookstore
             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
             docker compose up -d
