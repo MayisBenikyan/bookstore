@@ -6,8 +6,8 @@ services:
     image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/server
     container_name: bookstore_server
     volumes:
-      - ./server:/app
       - /app/node_modules
+      - ./server:/app
     environment:
       - POSTGRES_URL=postgresql://postgres:postgres@db:5432/bookstore
     depends_on:
@@ -34,8 +34,8 @@ services:
     image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/client
     container_name: bookstore_client
     volumes:
-      - ./client:/app
       - /app/node_modules
+      - ./client:/app
     depends_on:
       - server
     networks:
