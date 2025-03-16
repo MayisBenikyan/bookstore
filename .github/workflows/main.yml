@@ -111,6 +111,6 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/$SERVER_USERNAME/bookstore
+            cd /home/${{ secrets.SERVER_USERNAME }}/bookstore
             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
             docker compose up -d
