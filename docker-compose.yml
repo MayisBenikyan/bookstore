@@ -22,8 +22,8 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=bookstore
     volumes:
-      # - postgres-data:/var/lib/postgresql/data
-      # - ./migrations:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
     networks:
       - bookstore_network
 
