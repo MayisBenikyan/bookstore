@@ -113,5 +113,5 @@ jobs:
             # echo "Pulling latest images..."
             # docker compose pull
             # echo "Restarting services..."
-            docker compose up -d
+            docker compose up -d --build
             echo "Deployment completed!"
