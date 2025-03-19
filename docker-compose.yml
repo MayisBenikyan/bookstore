@@ -3,9 +3,9 @@ services:
     image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/server:latest
     restart: always
     container_name: bookstore_server
-    # volumes:
-    #   - /app/node_modules
-    #   - ./server:/app
+    volumes:
+      - /app/node_modules
+      - ./server:/app
     environment:
       - POSTGRES_URL=postgresql://postgres:postgres@db:5432/bookstore
     depends_on:
@@ -31,9 +31,9 @@ services:
     image: 423623864913.dkr.ecr.eu-north-1.amazonaws.com/web-app/client:latest
     restart: always
     container_name: bookstore_client
-    # volumes:
-    #   - /app/node_modules
-    #   - ./client:/app
+    volumes:
+      - /app/node_modules
+      - ./client:/app
     depends_on:
       - server
     networks:
