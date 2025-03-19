@@ -89,7 +89,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
         
-      - name: Copy docker-compose.yml via SSH
+      - name: Copy entire project via SSH
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
