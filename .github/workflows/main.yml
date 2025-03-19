@@ -108,10 +108,5 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/${{ secrets.SERVER_USERNAME }}/bookstore
-            # echo "Logging into AWS ECR..."
-            # aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-            # echo "Pulling latest images..."
-            # docker compose pull
-            # echo "Restarting services..."
             docker compose up -d --build
             echo "Deployment completed!"
