@@ -6,9 +6,9 @@ services:
       context: ./server
       dockerfile: Dockerfile.dev
     container_name: bookstore_server
-    volumes:
-      - /app/node_modules
-      - ./server:/app
+    # volumes:
+    #   - /app/node_modules
+    #   - ./server:/app
     environment:
       - POSTGRES_URL=postgresql://postgres:postgres@db:5432/bookstore
     depends_on:
@@ -20,8 +20,6 @@ services:
     image: postgres:13-alpine
     restart: always
     container_name: bookstore_db
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -39,9 +37,9 @@ services:
       context: ./client
       dockerfile: Dockerfile.dev
     container_name: bookstore_client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    # volumes:
+    #   - /app/node_modules
+    #   - ./client:/app
     depends_on:
       - server
     networks:
