@@ -61,6 +61,7 @@ services:
       - bookstore_network
 
   node-exporter:
+    restart: always
     image: prom/node-exporter
     container_name: node-exporter
     ports:
@@ -69,6 +70,7 @@ services:
       - bookstore_network
 
   prometheus:
+    restart: always
     image: prom/prometheus
     container_name: prometheus
     ports:
@@ -81,6 +83,7 @@ services:
       - node-exporter
 
   grafana:
+    restart: always
     image: grafana/grafana
     container_name: grafana
     ports:
