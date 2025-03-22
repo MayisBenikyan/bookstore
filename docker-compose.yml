@@ -92,7 +92,7 @@ services:
 
   filebeat:
     restart: always
-    image: docker.elastic.co/beats/filebeat:latest
+    image: elastic/filebeat
     container_name: filebeat
     user: root
     volumes:
@@ -106,7 +106,7 @@ services:
       
   elasticsearch:
     restart: always
-    image: docker.elastic.co/elasticsearch/elasticsearch:latest
+    image: elasticsearch
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -118,7 +118,7 @@ services:
 
   logstash:
     restart: always
-    image: docker.elastic.co/logstash/logstash:latest
+    image: logstash
     container_name: logstash
     depends_on:
       - elasticsearch
@@ -131,7 +131,7 @@ services:
 
   kibana:
     restart: always
-    image: docker.elastic.co/kibana/kibana:latest
+    image: kibana
     container_name: kibana
     ports:
       - 5601:5601
