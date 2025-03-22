@@ -90,6 +90,52 @@ services:
     depends_on:
       - prometheus
 
+  filebeat:
+    image: docker.elastic.co/beats/filebeat
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro  # Collect container logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - logstash
+    networks:
+      - bookstore_network
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - 9200:9200
+    networks:
+      - bookstore_network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    ports:
+      - 5001:5001
+    networks:
+      - bookstore_network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana
+    container_name: kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    networks:
+      - bookstore_network
+
 networks:
   bookstore_network:
     driver: bridge
