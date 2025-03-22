@@ -91,6 +91,7 @@ services:
       - prometheus
 
   filebeat:
+    restart: always
     image: docker.elastic.co/beats/filebeat
     container_name: filebeat
     user: root
@@ -104,6 +105,7 @@ services:
       - bookstore_network
       
   elasticsearch:
+    restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch
     container_name: elasticsearch
     environment:
@@ -115,6 +117,7 @@ services:
       - bookstore_network
 
   logstash:
+    restart: always
     image: docker.elastic.co/logstash/logstash
     container_name: logstash
     depends_on:
@@ -127,6 +130,7 @@ services:
       - bookstore_network
 
   kibana:
+    restart: always
     image: docker.elastic.co/kibana/kibana
     container_name: kibana
     ports:
