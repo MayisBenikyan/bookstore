@@ -56,6 +56,7 @@ services:
       - 8080:80
     networks:
       - bookstore_network
+      
 
   node-exporter:
     restart: always
@@ -90,28 +91,14 @@ services:
     depends_on:
       - prometheus
 
-  filebeat:
-    restart: always
-    image: elastic/filebeat:8.16.5
-    container_name: filebeat
-    user: root
-    volumes:
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - /var/lib/docker/containers:/var/lib/docker/containers
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    depends_on:
-      - logstash
-    networks:
-      - bookstore_network
-      
+
   elasticsearch:
     restart: always
-    image: elasticsearch:8.16.5
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - ELASTIC_PASSWORD=root
     ports:
       - 9200:9200
     networks:
@@ -119,20 +106,20 @@ services:
 
   logstash:
     restart: always
-    image: logstash:8.16.5
+    image: docker.elastic.co/logstash/logstash:7.17.0
     container_name: logstash
     depends_on:
       - elasticsearch
     volumes:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
-      - 5001:5001
+      - 5044:5044
     networks:
       - bookstore_network
 
   kibana:
     restart: always
-    image: kibana:8.16.5
+    image: docker.elastic.co/kibana/kibana:7.17.0
     container_name: kibana
     ports:
       - 5601:5601
