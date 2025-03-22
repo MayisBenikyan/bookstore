@@ -8,4 +8,4 @@ scrape_configs:
 
   - job_name: 'node_exporter'
     static_configs:
-      - targets: ['172.31.41.57:9100']
+      - targets: ['172.31.1.107:9100']
