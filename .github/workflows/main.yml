@@ -13,34 +13,34 @@ jobs:
 
 
       - name: Build Client Image
-        run: docker build -t web-app/client:latest -f ./client/Dockerfile.dev client
+        run: docker build -t bookstore/client:latest -f ./client/Dockerfile.dev client
 
       - name: Scan Client Image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: web-app/client:latest
+          image-ref: bookstore/client:latest
           format: "table"
           ignore-unfixed: true
 
 
       - name: Build Server Image
-        run: docker build -t web-app/server:latest -f ./server/Dockerfile.dev server
+        run: docker build -t bookstore/server:latest -f ./server/Dockerfile.dev server
 
       - name: Scan Server Image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: web-app/server:latest
+          image-ref: bookstore/server:latest
           format: "table"
           ignore-unfixed: true
           
 
       - name: Build Nginx Image
-        run: docker build -t web-app/nginx:latest -f ./nginx/Dockerfile.dev nginx
+        run: docker build -t bookstore/nginx:latest -f ./nginx/Dockerfile.dev nginx
 
       - name: Scan Nginx Image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: web-app/nginx:latest
+          image-ref: bookstore/nginx:latest
           format: "table"
           ignore-unfixed: true
 
@@ -61,24 +61,24 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
-          docker tag web-app/client:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:latest
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/client:latest
+          docker tag bookstore/client:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/bookstore/client:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/bookstore/client:latest
           
       - name: Tag and Push Server Image to ECR
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
-          docker tag web-app/server:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:latest
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/server:latest
+          docker tag bookstore/server:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/bookstore/server:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/bookstore/server:latest
           
       - name: Tag and Push Nginx Image to ECR
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
-          docker tag web-app/nginx:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:latest
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/web-app/nginx:latest
+          docker tag bookstore/nginx:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/bookstore/nginx:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/bookstore/nginx:latest
 
 
   deploy:
