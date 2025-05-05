@@ -15,7 +15,7 @@ jobs:
 
 
       - name: Build Client Image
-        run: docker build -t bookstore/client:latest -f ./client/Dockerfile.dev client
+        run: docker build -t bookstore/client:latest -t bookstore/client:${{ env.IMAGE_TAG }} -f ./client/Dockerfile.dev client
 
       - name: Scan Client Image with Trivy
         uses: aquasecurity/trivy-action@master
@@ -26,7 +26,7 @@ jobs:
 
 
       - name: Build Server Image
-        run: docker build -t bookstore/server:latest -f ./server/Dockerfile.dev server
+        run: docker build -t bookstore/server:latest -t bookstore/server:${{ env.IMAGE_TAG }} -f ./server/Dockerfile.dev server
 
       - name: Scan Server Image with Trivy
         uses: aquasecurity/trivy-action@master
@@ -37,7 +37,7 @@ jobs:
           
 
       - name: Build Nginx Image
-        run: docker build -t bookstore/nginx:latest -f ./nginx/Dockerfile.dev nginx
+        run: docker build -t bookstore/nginx:latest -t bookstore/nginx:${{ env.IMAGE_TAG }} -f ./nginx/Dockerfile.dev nginx
 
       - name: Scan Nginx Image with Trivy
         uses: aquasecurity/trivy-action@master
